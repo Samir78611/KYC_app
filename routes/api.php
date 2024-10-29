@@ -110,5 +110,3 @@ Route::post('fssai-verification', [BusinessController::class, 'fssaiVerification
 Route::post('importExport-verification', [BusinessController::class, 'importExportVerification']);
 Route::post('gst-details', [BusinessController::class, 'verify']);
 
-
-//hii
