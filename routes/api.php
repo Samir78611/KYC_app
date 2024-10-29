@@ -1,9 +1,17 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\CinController;
 use App\Http\Controllers\GSTController;
 use App\Http\Controllers\KYCController;
+use App\Http\Controllers\VerificationController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +55,56 @@ Route::post('/submit_otp',[KYCController::class,'submitData']);
 
 
 //nikita side apis 
-//hii samir
+//KYC Apis
+Route::post('authenticate', [AuthController::class, 'authenticate']);
+
+Route::post('verify-bank-account', [AuthController::class, 'verifyBankAccount']);
+Route::post('mobile-to-bank-verification', [AuthController::class, 'mobileToBankVerification']);
+
+//Aadhaar Verification (w OTP)
+Route::post('aadhaar-get-otp', [AuthController::class, 'aadhaarGetOtp']);
+Route::post('aadhaar-submit-otp', [AuthController::class, 'aadhaarSubmitOtp']);
+
+//Aadhar To Pan Number
+Route::post('aadhaar-to-pan', [AuthController::class, 'aadhaarToPan']);
+//Aadhaar Validation (w/o OTP, w/o Demographic)
+Route::post('aadhaar-advanced-verification', [AuthController::class, 'aadhaarAdvancedVerification']);
+Route::post('verify', [AuthController::class, 'aadhaarVerify']);
+
+// Mobile to Pan Number
+Route::post('mobile-To-PanNumber', [VerificationController::class, 'mobileToPanNumber']);
+
+//PAN - Detailed II
+Route::post('pan-detailed-II', [VerificationController::class, 'panDetail']);
+
+Route::post('pan-verification-basic', [VerificationController::class, 'panVerificationBasic']);
+//Address Insight
+Route::post('address-Insight', [VerificationController::class, 'addressInsight']);
+// Address Geocode
+Route::post('geocode-address', [VerificationController::class, 'geocodeAddress']);
+//CA Membership Verification
+Route::post('ca-verification', [VerificationController::class, 'caVerification']);
+//CIN Pull - Basic
+Route::post('cin-basic-verification', [VerificationController::class, 'cinBasic']);
+//cin-advanced
+Route::post('cin-pull-detailed', [VerificationController::class, 'cinPullDetailed']);
+//Proprietor Hunter
+Route::post('proprietor-hunter', [CinController::class, 'proprietorHunter']);
+//business-pan-detailed
+Route::post('business-pan-detailed', [CinController::class, 'businessPanDetailed']);
+//Employer Default Check
+Route::post('employer-check', [CinController::class, 'employerCheck']);
+//din-advanced
+Route::post('din-advanced', [CinController::class, 'dinAdvanced']);
+//company-name-to-cin
+Route::post('company-name-to-cin', [CinController::class, 'companyNameToCin']);
+//Company Name to GST
+Route::post('company-name-to-gst', [CinController::class, 'companyNameToGst']);
+//Employer EPFO - Basic Information
+Route::post('epfo-pull-basic', [CinController::class, 'epfoBasic']);
+//Employer EPFO - Detailed Information
+Route::post('epfo-detailed', [CinController::class, 'epfoDetailed']);
+//FSSAI License Verification
+Route::post('fssai-verification', [BusinessController::class, 'fssaiVerification']);
+//Import - Export Code Verification
+Route::post('importExport-verification', [BusinessController::class, 'importExportVerification']);
