@@ -47,4 +47,4 @@ Route::post('/submit_otp',[KYCController::class,'submitData']);
 
 
 //nikita side apis 
-//hii nikita
+//hii samir
