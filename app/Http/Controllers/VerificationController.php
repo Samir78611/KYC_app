@@ -236,7 +236,7 @@ class VerificationController extends Controller
         // Return the API response
         return response()->json(json_decode($response), 200);
     }
-   
+
     public function addressInsight(Request $request)
     {
         // Validate the incoming request data
@@ -299,7 +299,7 @@ class VerificationController extends Controller
 
         // Execute the request
         $response = curl_exec($curl);
-        
+
         // Check for cURL errors
         if ($response === false) {
             return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
@@ -377,7 +377,7 @@ class VerificationController extends Controller
 
         // Execute the request
         $response = curl_exec($curl);
-        
+
         // Check for cURL errors
         if ($response === false) {
             return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
@@ -446,7 +446,7 @@ class VerificationController extends Controller
 
         // Execute the request
         $response = curl_exec($curl);
-        
+
         // Check for cURL errors
         if ($response === false) {
             return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
@@ -593,6 +593,75 @@ class VerificationController extends Controller
         // Get HTTP status code
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl); // Close cURL session
+
+        // Check if response is not 200
+        if ($httpStatus != 200) {
+            return response()->json(['error' => 'API error: ' . $response], $httpStatus);
+        }
+
+        // Return the API response
+        return response()->json(json_decode($response), 200);
+    }
+
+    public function cinIntermediate(Request $request)
+    {
+        // Validate incoming request data
+        $validatedData = $request->validate([
+            'token' => 'required|string',
+            'apiKey' => 'required|string',
+            'cinNumber' => 'required|string',
+        ]);
+
+        // Extract validated data
+        $token = $validatedData['token'];
+        $apiKey = $validatedData['apiKey'];
+        $cinNumber = $validatedData['cinNumber'];
+
+        // API endpoint
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
+
+        // Prepare the request payload
+        $payload = [
+            "category" => "employer-profiling",
+            "type" => "cin-intermediate",
+            "applicationId" => "test",
+            "data" => [
+                "cinNumber" => $cinNumber,
+            ]
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if ($response === false) {
+            return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
+        }
+
+        // Get HTTP status code
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
 
         // Check if response is not 200
         if ($httpStatus != 200) {

@@ -92,6 +92,8 @@ Route::post('cin-basic-verification', [VerificationController::class, 'cinBasic'
 Route::post('cin-pull-detailed', [VerificationController::class, 'cinPullDetailed']);
 //Proprietor Hunter
 Route::post('proprietor-hunter', [CinController::class, 'proprietorHunter']);
+//CIN Pull - Elementary
+Route::post('cin-intermediate', [VerificationController::class, 'cinIntermediate']);
 //business-pan-detailed
 Route::post('business-pan-detailed', [CinController::class, 'businessPanDetailed']);
 //Employer Default Check
@@ -111,4 +113,10 @@ Route::post('fssai-verification', [BusinessController::class, 'fssaiVerification
 //Import - Export Code Verification
 Route::post('importExport-verification', [BusinessController::class, 'importExportVerification']);
 Route::post('gst-details', [BusinessController::class, 'verify']);
+//KYB 1 (Company Search)
+Route::post('kyb-company-search', [BusinessController::class, 'companySearch']);
+//PAN to GST Detailed
+Route::post('pan-gst-detailed', [BusinessController::class, 'panGstAdvanced']);
+// Basic Mobile Name Lookup (w/o OTP)
+Route::post('basic-mobile-name', [BusinessController::class, 'basicMobileName']);
 
