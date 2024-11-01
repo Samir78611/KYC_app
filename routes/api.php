@@ -125,4 +125,7 @@ Route::post('mobile-number-verify-submit-otp', [BusinessController::class, 'subm
 //Advance work email verification (w/o OTP)
 Route::post('advance-work-email-verify', [BusinessController::class, 'advanceWorkEmailVerify']);
 
-
+//Advance work email verification (w OTP)
+Route::post('advance-work-email-verify-withOtp', [BusinessController::class, 'verifyWorkEmailOtp']);
+Route::post('email-verify-requestOtp', [BusinessController::class, 'emailVerificationRequestOtp']);
+Route::post('submit-verify-requestOtp', [BusinessController::class, 'SubmitWorkEmailOtp']);
