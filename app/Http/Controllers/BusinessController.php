@@ -417,4 +417,222 @@ class BusinessController extends Controller
         // Return the API response
         return response()->json(json_decode($response), 200);
     }
+
+    public function generateOtp(Request $request)
+    {
+        // Validate incoming request data
+        $validatedData = $request->validate([
+            'token' => 'required|string',
+            'apiKey' => 'required|string',
+            'mobileNo' => 'required|string',
+        ]);
+
+        // Extract validated data
+        $token = $validatedData['token'];
+        $apiKey = $validatedData['apiKey'];
+        $mobileNo = $validatedData['mobileNo'];
+
+        // API endpoint
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
+
+        // Prepare the request payload
+        $payload = [
+            "category" => "utility-pii-data",
+            "type" => "mobile-number-verify-generate-otp",
+            "applicationId" => "test",
+            "data" => [
+                "mobileNo" => $mobileNo,
+            ]
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if ($response === false) {
+            return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
+        }
+
+        // Get HTTP status code
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        // Check if response is not 200
+        if ($httpStatus != 200) {
+            return response()->json(['error' => 'API error: ' . $response], $httpStatus);
+        }
+
+        // Return the API response
+        return response()->json(json_decode($response), 200);
+    }
+
+    public function submitOtp(Request $request)
+    {
+        // Validate incoming request data
+        $validatedData = $request->validate([
+            'token' => 'required|string',
+            'apiKey' => 'required|string',
+            'mobileNo' => 'required|string',
+            'otp' => 'required|string',
+            'referenceId' => 'required|string',
+        ]);
+
+        // Extract validated data
+        $token = $validatedData['token'];
+        $apiKey = $validatedData['apiKey'];
+        $mobileNo = $validatedData['mobileNo'];
+        $otp = $validatedData['otp'];
+        $referenceId = $validatedData['referenceId'];
+
+        // API endpoint
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
+
+        // Prepare the request payload
+        $payload = [
+            "category" => "utility-pii-data",
+            "type" => "mobile-number-verify-submit-otp",
+            "applicationId" => "test",
+            "data" => [
+                "mobileNo" => $mobileNo,
+                "otp" => $otp,
+                "referenceId" => $referenceId
+            ]
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if ($response === false) {
+            return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
+        }
+
+        // Get HTTP status code
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        // Check if response is not 200
+        if ($httpStatus != 200) {
+            return response()->json(['error' => 'API error: ' . $response], $httpStatus);
+        }
+
+        // Return the API response
+        return response()->json(json_decode($response), 200);
+    }
+
+    public function advanceWorkEmailVerify(Request $request)
+    {
+        // Validate incoming request data
+        $validatedData = $request->validate([
+            'token' => 'required|string',
+            'apiKey' => 'required|string',
+            'email' => 'required|email',
+            'employeeName' => 'required|string',
+            'employerName' => 'required|string',
+            'mode' => 'required|string',
+        ]);
+
+        // Extract validated data
+        $token = $validatedData['token'];
+        $apiKey = $validatedData['apiKey'];
+        $email = $validatedData['email'];
+        $employeeName = $validatedData['employeeName'];
+        $employerName = $validatedData['employerName'];
+        $mode = $validatedData['mode'];
+
+        // API endpoint
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/advance_work_email_verify';
+
+        // Prepare the request payload
+        $payload = [
+            "applicationId" => "test",
+            "email" => $email,
+            "employeeName" => $employeeName,
+            "employerName" => $employerName,
+            "mode" => $mode
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if ($response === false) {
+            return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
+        }
+
+        // Get HTTP status code
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        // Check if response is not 200
+        if ($httpStatus != 200) {
+            return response()->json(['error' => 'API error: ' . $response], $httpStatus);
+        }
+
+        // Return the API response
+        return response()->json(json_decode($response), 200);
+    }
 }

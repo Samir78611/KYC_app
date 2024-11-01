@@ -119,4 +119,10 @@ Route::post('kyb-company-search', [BusinessController::class, 'companySearch']);
 Route::post('pan-gst-detailed', [BusinessController::class, 'panGstAdvanced']);
 // Basic Mobile Name Lookup (w/o OTP)
 Route::post('basic-mobile-name', [BusinessController::class, 'basicMobileName']);
+//Mobile Info (w OTP)
+Route::post('mobile-number-verify-generate-otp', [BusinessController::class, 'generateOtp']);
+Route::post('mobile-number-verify-submit-otp', [BusinessController::class, 'submitOtp']);
+//Advance work email verification (w/o OTP)
+Route::post('advance-work-email-verify', [BusinessController::class, 'advanceWorkEmailVerify']);
+
 
