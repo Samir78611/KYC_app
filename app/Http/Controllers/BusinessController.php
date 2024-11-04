@@ -636,4 +636,166 @@ class BusinessController extends Controller
         return response()->json(json_decode($response), 200);
     }
 
+    //Advance work email verification (w OTP)
+
+     public function verifyWorkEmailOtp(Request $request)
+    {
+        // Define the URL and get dynamic values from the request
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/advance_work_email_otp_verify';
+        $token = $request->input('token');
+        $apiKey = $request->input('apiKey');
+        
+        // Define the payload with dynamic request data
+        $payload = [
+            "applicationId" => $request->input('applicationId', 'test'),
+            "email" => $request->input('email'),
+            "employeeName" => $request->input('employeeName'),
+            "employerName" => $request->input('employerName'),
+            "mode" => $request->input('mode', 'PROD')
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for errors
+        if (curl_errno($curl)) {
+            // Handle cURL error
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Return the response
+        return response()->json(['response' => json_decode($response, true)]);
+    }
+
+    public function emailVerificationRequestOtp(Request $request)
+    {
+        // Define the URL and get dynamic values from the request
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/advance_work_email_otp/send';
+        $token = $request->input('token');
+        $apiKey = $request->input('apiKey');
+        $id = $request->input('id'); // Retrieve the ID from the request
+
+        // Define the payload with dynamic ID
+        $payload = [
+            "id" => $id
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for errors
+        if (curl_errno($curl)) {
+            // Handle cURL error
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Return the response
+        return response()->json(['response' => json_decode($response, true)]);
+    }
+
+    public function SubmitWorkEmailOtp(Request $request)
+    {
+        // Define the URL and get dynamic values from the request
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/advance_work_email_otp/verify';
+        $token = $request->input('token');
+        $apiKey = $request->input('apiKey');
+        $id = $request->input('id');
+        $otp = $request->input('otp'); // Get OTP from request
+
+        // Define the payload with dynamic ID and OTP
+        $payload = [
+            "id" => $id,
+            "otp" => $otp
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for errors
+        if (curl_errno($curl)) {
+            // Handle cURL error
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Return the response
+        return response()->json(['response' => json_decode($response, true)]);
+    }
 }

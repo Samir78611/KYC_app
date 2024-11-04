@@ -31,32 +31,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('request-otp',[GSTController::class,'requestOTP']);
-Route::post('request-token',[GSTController::class,'requestToken']);
-Route::post('extension_token',[GSTController::class,'extension_token']);
-
-Route::post('saveGSTR1',[GSTController::class,'saveGSTR1']);
-
-
 //authentication
-Route::post('/authenticate_token',[KYCController::class,'authenticate']);
+//Route::post('/authenticate_token',[KYCController::class,'authenticate']);
 
-//Bank statements
-Route::post('/verify_bank_account',[KYCController::class,'verifyBankAccount']);
-Route::post('/verify_mobile_to_bank',[KYCController::class,'verifyMobileToBank']);
-
-
-//Identify and Personal
-Route::post('/verify_aadhar_to_pan',[KYCController::class,'verifyAadhaarToPan']);
-Route::post('/aadhar_validation',[KYCController::class,'verifyAadhaarAdvanced']);
+////Bank statements
+//Route::post('/verify_bank_account',[KYCController::class,'verifyBankAccount']);
+//Route::post('/verify_mobile_to_bank',[KYCController::class,'verifyMobileToBank']);
 
 
-//Aadhaar Verification (w OTP)
-Route::post('/get_otp',[KYCController::class,'verifyAadhaarOfflineOtp']);
-Route::post('/submit_otp',[KYCController::class,'submitData']);
+////Identify and Personal
+//Route::post('/verify_aadhar_to_pan',[KYCController::class,'verifyAadhaarToPan']);
+//Route::post('/aadhar_validation',[KYCController::class,'verifyAadhaarAdvanced']);
 
 
-//nikita side apis 
+////Aadhaar Verification (w OTP)
+//Route::post('/get_otp',[KYCController::class,'verifyAadhaarOfflineOtp']);
+//Route::post('/submit_otp',[KYCController::class,'submitData']);
+
+
+//nikita side apis ..
 //KYC Apis
 Route::post('authenticate', [AuthController::class, 'authenticate']);
 
@@ -125,5 +118,8 @@ Route::post('mobile-number-verify-submit-otp', [BusinessController::class, 'subm
 //Advance work email verification (w/o OTP)
 Route::post('advance-work-email-verify', [BusinessController::class, 'advanceWorkEmailVerify']);
 
-
-
+//Advance work email verification (w OTP)
+Route::post('advance-work-email-verify-withOtp', [BusinessController::class, 'verifyWorkEmailOtp']);
+Route::post('email-verify-requestOtp', [BusinessController::class, 'emailVerificationRequestOtp']);
+Route::post('submit-verify-requestOtp', [BusinessController::class, 'SubmitWorkEmailOtp']);
+//hii nikita
