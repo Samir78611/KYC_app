@@ -128,6 +128,8 @@ Route::get('/email-verification-with-generate-otp',[BusinessController::class,'v
 Route::get('/email-verification-with-submit-otp',[BusinessController::class,'verifyOtp']);
 //Email Verification (w/o OTP)
 Route::get('/email-verification-without-otp',[BusinessController::class,'EV_without_otp']);
+
+
 //DigiLocker - Get File
 Route::post('digilocker-file', [DigilockerController::class, 'getDigiLockerFile']);
 //DigiLocker - Get issued file list
