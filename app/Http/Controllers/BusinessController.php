@@ -799,4 +799,172 @@ class BusinessController extends Controller
         // Return the response
         return response()->json(['response' => json_decode($response, true)]);
     }
+
+
+    public function verifyEmail(Request $request)
+    {
+        // Define the base URL and get dynamic query parameters from the request
+        $baseUrl = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verify-email';
+        $token = $request->input('token');
+        $apiKey = $request->input('apiKey');
+        
+        // Get dynamic query parameters
+        $email = $request->input('email');
+        $type = $request->input('type', 'otp');
+        $extractCompanyName = $request->input('extractCompanyName', 'false');
+        $endUserId = $request->input('endUserId', 'test');
+        $mode = $request->input('mode', 'PROD');
+
+        // Construct the full URL with query parameters
+        $url = $baseUrl . '?email=' . urlencode($email) . '&type=' . $type 
+            . '&extractCompanyName=' . $extractCompanyName . '&endUserId=' 
+            . $endUserId . '&mode=' . $mode;
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET', // This is a GET request
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for errors
+        if (curl_errno($curl)) {
+            // Handle cURL error
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Return the response
+        return response()->json(['response' => json_decode($response, true)]);
+    }
+
+
+    public function verifyOtp(Request $request)
+    {
+        // Define the base URL and get dynamic query parameters from the request
+        $baseUrl = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verify/otp';
+        $token = $request->input('token');
+        $apiKey = $request->input('apiKey');
+        
+        // Get dynamic query parameters
+        $otp = $request->input('otp');
+        $hashKey = $request->input('hashKey');
+        $endUserId = $request->input('endUserId', 'test');
+        $mode = $request->input('mode', 'PROD');
+
+        // Construct the full URL with query parameters
+        $url = $baseUrl . '?otp=' . urlencode($otp) . '&hashKey=' . urlencode($hashKey)
+            . '&endUserId=' . $endUserId . '&mode=' . $mode;
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET', // This is a GET request
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for errors
+        if (curl_errno($curl)) {
+            // Handle cURL error
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Return the response
+        return response()->json(['response' => json_decode($response, true)]);
+    }
+
+    public function EV_without_otp(Request $request)
+    {
+        // Define the base URL and get dynamic query parameters from the request
+        $baseUrl = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verify-email';
+        $token = $request->input('token');
+        $apiKey = $request->input('apiKey');
+        
+        // Get dynamic query parameters
+        $email = $request->input('email');
+        $type = $request->input('type', 'email'); // Default type is 'email'
+        $extractCompanyName = $request->input('extractCompanyName', 'false'); // Default value is 'false'
+
+        // Construct the full URL with query parameters
+        $url = $baseUrl . '?email=' . urlencode($email) . '&type=' . $type 
+            . '&extractCompanyName=' . $extractCompanyName;
+
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET', // This is a GET request
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the cURL request
+        $response = curl_exec($curl);
+
+        // Check for errors
+        if (curl_errno($curl)) {
+            // Handle cURL error
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Return the response
+        return response()->json(['response' => json_decode($response, true)]);
+    }
 }

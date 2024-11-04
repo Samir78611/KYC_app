@@ -122,3 +122,12 @@ Route::post('advance-work-email-verify', [BusinessController::class, 'advanceWor
 Route::post('advance-work-email-verify-withOtp', [BusinessController::class, 'verifyWorkEmailOtp']);
 Route::post('email-verify-requestOtp', [BusinessController::class, 'emailVerificationRequestOtp']);
 Route::post('submit-verify-requestOtp', [BusinessController::class, 'SubmitWorkEmailOtp']);
+
+
+//Email Verification with OTP
+
+Route::get('/email-verification-with-generate-otp',[BusinessController::class,'verifyEmail']);
+Route::get('/email-verification-with-submit-otp',[BusinessController::class,'verifyOtp']);
+
+//Email Verification (w/o OTP)
+Route::get('/email-verification-without-otp',[BusinessController::class,'EV_without_otp']);
