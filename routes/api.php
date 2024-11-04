@@ -136,3 +136,7 @@ Route::post('digilocker-file', [DigilockerController::class, 'getDigiLockerFile'
 Route::post('digilocker-issued-file-list', [DigilockerController::class, 'getDigiLockerIssuedFileList']);
 //DigiLocker - Get self issued document
 Route::post('get-all-issued-documents', [DigilockerController::class, 'getAllIssuedDocuments']);
+
+
+//Legal Verification APIs
+Route::post('verify-court-record', [BusinessController::class, 'verifyCourtRecord']);
