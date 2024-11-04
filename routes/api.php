@@ -3,11 +3,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CinController;
+use App\Http\Controllers\DigilockerController;
 use App\Http\Controllers\GSTController;
 use App\Http\Controllers\KYCController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -121,4 +123,10 @@ Route::post('advance-work-email-verify', [BusinessController::class, 'advanceWor
 Route::post('advance-work-email-verify-withOtp', [BusinessController::class, 'verifyWorkEmailOtp']);
 Route::post('email-verify-requestOtp', [BusinessController::class, 'emailVerificationRequestOtp']);
 Route::post('submit-verify-requestOtp', [BusinessController::class, 'SubmitWorkEmailOtp']);
-//hii nikita
+//DigiLocker - Get File
+Route::post('digilocker-file', [DigilockerController::class, 'getDigiLockerFile']);
+//DigiLocker - Get issued file list
+Route::post('digilocker-issued-file-list', [DigilockerController::class, 'getDigiLockerIssuedFileList']);
+//DigiLocker - Get self issued document
+Route::post('get-all-issued-documents', [DigilockerController::class, 'getAllIssuedDocuments']);
+
