@@ -635,4 +635,5 @@ class BusinessController extends Controller
         // Return the API response
         return response()->json(json_decode($response), 200);
     }
+
 }
