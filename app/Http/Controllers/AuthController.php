@@ -322,7 +322,7 @@ class AuthController extends Controller
         ]);
     
         // Define the API endpoint
-        $url = 'https://your-api-host.com/aphrodite/external/v1/verification';
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
     
         // Get the API key and token dynamically from the request
         $token = $validatedData['token'];   // Dynamic bearer token
@@ -546,37 +546,22 @@ class AuthController extends Controller
     // Aadhar Validation (w/o OTP) - Demographic Details
     public function aadhaarVerify(Request $request)
     {
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'aadhaarNumber' => 'required|string',
-            'token' => 'required|string',      // Validate token
-            'apiKey' => 'required|string',      // Validate API key
-        ]);
-    
-        // Define the API endpoint
         $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
-    
-        // Prepare the JSON payload
+        $token = $request->input('token');
+        $apiKey = $request->input('apiKey');
+        
+        // Define the payload with dynamic request data
         $payload = [
-            'category' => 'individual-pii-data',
-            'type' => 'aadhaar-advanced',
-            "applicationId" => "test", // Default to 'test' if not provided
-            'data' => [
-                'aadhaarNumber' => $validatedData['aadhaarNumber'],
-            ],
+            "category" => "individual-pii-data",
+            "type" => "aadhaar-advanced",
+            "applicationId" => $request->input('applicationId', 'test'),
+            "data" => [
+                "aadhaarNumber" => $request->input('aadhaarNumber')
+            ]
         ];
-    
-        // Define the headers for the request
-        $headers = [
-            'Authorization: Bearer ' . $validatedData['token'],
-            'x-api-key: ' . $validatedData['apiKey'],
-            'Content-Type: application/json',
-        ];
-    
+
         // Initialize cURL
         $curl = curl_init();
-    
-        // Set cURL options
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt_array($curl, [
@@ -589,29 +574,28 @@ class AuthController extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
         ]);
-    
-        // Execute the request
+
+        // Execute the cURL request
         $response = curl_exec($curl);
-    
-        // Check for cURL errors
-        if ($response === false) {
-            return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
+
+        // Check for errors
+        if (curl_errno($curl)) {
+            // Handle cURL error
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error], 500);
         }
-    
-        // Get HTTP status code
-        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
-        // Close cURL session
+
+        // Close the cURL session
         curl_close($curl);
-    
-        // Check if response is not 200
-        if ($httpStatus != 200) {
-            return response()->json(['error' => 'API error: ' . $response], $httpStatus);
-        }
-    
-        // Return the API response
-        return response()->json(json_decode($response), 200);
+
+        // Return the response
+        return response()->json(['response' => json_decode($response, true)]);
     }
 }

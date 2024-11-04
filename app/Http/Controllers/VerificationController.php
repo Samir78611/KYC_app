@@ -330,6 +330,9 @@ class VerificationController extends Controller
             'state' => 'nullable|string',           // Optional state
         ]);
 
+
+        //dd($request->all());
+
         // Extract validated data
         $token = $validatedData['token'];
         $apiKey = $validatedData['apiKey'];
