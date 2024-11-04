@@ -129,4 +129,8 @@ Route::post('digilocker-file', [DigilockerController::class, 'getDigiLockerFile'
 Route::post('digilocker-issued-file-list', [DigilockerController::class, 'getDigiLockerIssuedFileList']);
 //DigiLocker - Get self issued document
 Route::post('get-all-issued-documents', [DigilockerController::class, 'getAllIssuedDocuments']);
-
+//Email Verification with OTP
+Route::get('/email-verification-with-generate-otp',[BusinessController::class,'verifyEmail']);
+Route::get('/email-verification-with-submit-otp',[BusinessController::class,'verifyOtp']);
+//Email Verification (w/o OTP)
+Route::get('/email-verification-without-otp',[BusinessController::class,'EV_without_otp']);
