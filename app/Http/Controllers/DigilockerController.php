@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
 class DigilockerController extends Controller
@@ -207,4 +207,61 @@ class DigilockerController extends Controller
         // Return the API response
         return response()->json(['response' => json_decode($response, true)]);
     }
+
+    //aadhar ocr
+    public function processAadhaarOcr(Request $request)
+    {
+     // Validate the request
+     $request->validate([
+        'token' => 'required|string',
+        'apiKey' => 'required|string',
+        'applicationId' => 'required|string',
+        'front_image' => 'required|file|mimes:jpg,jpeg,png',
+        'back_image' => 'required|file|mimes:jpg,jpeg,png',
+    ]);
+
+    // Get the validated input data
+    $token = $request->input('token');
+    $apiKey = $request->input('apiKey');
+    $applicationId = $request->input('applicationId');
+    $frontImage = $request->file('front_image');
+    $backImage = $request->file('back_image');
+
+    // Prepare the file paths
+    $frontImagePath = $frontImage->getPathname();
+    $backImagePath = $backImage->getPathname();
+
+    // Make the HTTP request
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $token,
+        'x-api-key' => $apiKey,
+    ])->attach(
+        'front_image', file_get_contents($frontImagePath), $frontImage->getClientOriginalName()
+    )->attach(
+        'back_image', file_get_contents($backImagePath), $backImage->getClientOriginalName()
+    )->post('https://api-prod.tartanhq.com/aphrodite/external/v1/verification/file', [
+        'mode' => 'PROD',
+        'category' => 'individual-pii-data',
+        'type' => 'aadhaar-ocr',
+        'applicationId' => $applicationId,
+    ]);
+
+    // Return the API response
+    if ($response->successful()) {
+        return response()->json([
+            'message' => 'Files uploaded successfully',
+            'data' => $response->json(),
+        ]);
+    } else {
+        return response()->json([
+            'message' => 'Failed to upload files',
+            'error' => $response->json(),
+        ], $response->status());
+    }
+}
+
+//testing
+
+
+
 }

@@ -17,10 +17,8 @@ use App\Http\Controllers\AdminController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('ocr');
-// });
+ Route::get('/', function () {
+     return view('welcome');
+ });
 
-Route::get('/superadmin/create-admin', [AdminController::class, 'create'])->name('admin.create');
-Route::post('/superadmin/store-admin', [AdminController::class, 'store'])->name('admin.store');
 
