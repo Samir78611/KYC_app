@@ -188,15 +188,9 @@ class BusinessController extends Controller
 
         // Execute the cURL request
         $response = curl_exec($curl);
+        //dd($response);
 
-        // Check for errors
-        if (curl_errno($curl)) {
-            // Handle cURL error
-            $error = curl_error($curl);
-            curl_close($curl);
-            return response()->json(['error' => $error], 500);
-        }
-
+     
         // Close the cURL session
         curl_close($curl);
 
@@ -327,12 +321,9 @@ class BusinessController extends Controller
 
         // Execute the cURL request
         $response = curl_exec($curl);
+        //dd($response);
 
-        // Check for cURL errors
-        if ($response === false) {
-            return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
-        }
-
+      
         // Get HTTP status code
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
@@ -451,7 +442,7 @@ class BusinessController extends Controller
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
+            CURLOPT_TIMEOUT => 60,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
@@ -466,11 +457,7 @@ class BusinessController extends Controller
         // Execute the cURL request
         $response = curl_exec($curl);
 
-        // Check for cURL errors
-        if ($response === false) {
-            return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
-        }
-
+       
         // Get HTTP status code
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
@@ -948,6 +935,7 @@ class BusinessController extends Controller
 
         // Execute the cURL request
         $response = curl_exec($curl);
+        //dd($response);
 
         // Check for errors
         if (curl_errno($curl)) {
@@ -1015,6 +1003,7 @@ class BusinessController extends Controller
 
         // Execute the cURL request
         $response = curl_exec($curl);
+        //dd($response);
 
         // Check for errors
         if (curl_errno($curl)) {

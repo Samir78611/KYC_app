@@ -7,6 +7,7 @@ use App\Http\Controllers\DigilockerController;
 use App\Http\Controllers\GSTController;
 use App\Http\Controllers\KYCController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\PayslipController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/generate-payslip', [App\Http\Controllers\PayslipController::class, 'generatePayslip']);
+Route::post('/extract-payslip', [PayslipController::class, 'extractPayslip']);
+Route::get('/get-payslip-data/{id}', [PayslipController::class, 'getPayslipData']);
 
 
 //authentication
@@ -136,5 +141,4 @@ Route::post('digilocker-issued-file-list', [DigilockerController::class, 'getDig
 Route::post('get-all-issued-documents', [DigilockerController::class, 'getAllIssuedDocuments']);
 //Legal Verification APIs
 Route::post('verify-court-record', [BusinessController::class, 'verifyCourtRecord']);
-
-
+Route::post('aadhar-ocr', [DigilockerController::class, 'processAadhaarOcr']);
