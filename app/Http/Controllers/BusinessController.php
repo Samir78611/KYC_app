@@ -155,9 +155,6 @@ class BusinessController extends Controller
         $apiKey = $request->input('apiKey');
         $idNumber = $request->input('data.id_number'); // Nested data object
 
-
-
-
         // Define the payload
         $payload = [
             "category" => "employer-profiling",
