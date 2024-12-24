@@ -8,8 +8,13 @@ use App\Http\Controllers\GSTController;
 use App\Http\Controllers\KYCController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\PayslipController;
+use App\Http\Controllers\PanController;
+use App\Http\Controllers\udyamController;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -146,3 +151,10 @@ Route::post('get-all-issued-documents', [DigilockerController::class, 'getAllIss
 //Legal Verification APIs
 Route::post('verify-court-record', [BusinessController::class, 'verifyCourtRecord']);
 Route::post('aadhar-ocr', [DigilockerController::class, 'processAadhaarOcr']);
+
+//pan ocr
+Route::post('pan-ocr', [PanController::class, 'panOcrApi']);
+
+
+//udyam
+Route::get('cosented-data-fetched/{id}',[udyamController::class,'getApplication']);
