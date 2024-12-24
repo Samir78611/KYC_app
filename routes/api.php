@@ -142,3 +142,5 @@ Route::post('get-all-issued-documents', [DigilockerController::class, 'getAllIss
 //Legal Verification APIs
 Route::post('verify-court-record', [BusinessController::class, 'verifyCourtRecord']);
 Route::post('aadhar-ocr', [DigilockerController::class, 'processAadhaarOcr']);
+//Non Consented Data Fetch
+Route::get('get-non-consented-data-fetch/{id}', [VerificationController::class, 'getApplicationById']);

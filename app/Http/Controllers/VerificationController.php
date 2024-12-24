@@ -674,4 +674,60 @@ class VerificationController extends Controller
         // Return the API response
         return response()->json(json_decode($response), 200);
     }
+
+    //Non Consented Data Fetch
+    public function getApplicationById(Request $request, $id)
+    {
+        $authorizationToken = $request->header('Authorization'); // Get Authorization token from the header
+
+        if (!$authorizationToken) {
+            return response()->json(['error' => 'Authorization token is required'], 400);
+        }
+
+        $baseUrl = "https://api-prod.tartanhq.com/aphrodite/api/dashboard/v1/application/$id";
+
+        // Initialize cURL session
+        $curl = curl_init();
+
+        // Set cURL options
+        curl_setopt($curl, CURLOPT_URL, $baseUrl);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'Authorization: ' . $authorizationToken,
+        ]);
+
+        // Execute cURL request
+        $response = curl_exec($curl);
+
+        // Handle cURL errors
+        if ($response === false) {
+            return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
+        }
+
+        // Get HTTP response status
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        // Handle non-200 HTTP responses
+        if ($httpStatus != 200) {
+            $responseDecoded = json_decode($response, true);
+
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return response()->json([
+                    'error' => 'API error',
+                    'details' => $responseDecoded
+                ], $httpStatus);
+            } else {
+                return response()->json([
+                    'error' => 'API error',
+                    'details' => $response
+                ], $httpStatus);
+            }
+        }
+
+        // Return the successful response
+        return response()->json(json_decode($response, true), 200);
+    }
 }
