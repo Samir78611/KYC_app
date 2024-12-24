@@ -8,8 +8,13 @@ use App\Http\Controllers\GSTController;
 use App\Http\Controllers\KYCController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\PayslipController;
+use App\Http\Controllers\PanController;
+use App\Http\Controllers\udyamController;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -144,3 +149,7 @@ Route::post('verify-court-record', [BusinessController::class, 'verifyCourtRecor
 Route::post('aadhar-ocr', [DigilockerController::class, 'processAadhaarOcr']);
 //Non Consented Data Fetch
 Route::get('get-non-consented-data-fetch/{id}', [VerificationController::class, 'getApplicationById']);
+//pan ocr
+Route::post('pan-ocr', [PanController::class, 'panOcrApi']);
+//udyam
+Route::get('cosented-data-fetched/{id}',[udyamController::class,'getApplication']);
