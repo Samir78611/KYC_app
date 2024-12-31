@@ -153,3 +153,7 @@ Route::get('get-non-consented-data-fetch/{id}', [VerificationController::class, 
 Route::post('pan-ocr', [PanController::class, 'panOcrApi']);
 //udyam
 Route::get('cosented-data-fetched/{id}',[udyamController::class,'getApplication']);
+//ITR APis
+//Async Status API
+Route::get('async-status-api', [PanController::class, 'getLoginStatus']);
+Route::post('password-input', [PanController::class, 'itrLogin']);

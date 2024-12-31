@@ -7,76 +7,215 @@ use Illuminate\Http\Request;
 class PanController extends Controller
 {
     public function panOcrApi(Request $request)
-{
-    // Get dynamic parameters from the request
-    $token = $request->input('token'); // Replace with default token for testing
-    $apiKey = $request->input('apiKey'); // Replace with your API key for testing
-    $filePath = $request->file('front_image'); // Handle the uploaded file
+    {
+        // Get dynamic parameters from the request
+        $token = $request->input('token'); // Replace with default token for testing
+        $apiKey = $request->input('apiKey'); // Replace with your API key for testing
+        $filePath = $request->file('front_image'); // Handle the uploaded file
 
-    //// Validate file input
-    //if (!$filePath || !$filePath->isValid()) {
-    //    return response()->json([
-    //        'message' => 'Invalid or missing front_image file.',
-    //    ], 400);
-    //}
+        //// Validate file input
+        //if (!$filePath || !$filePath->isValid()) {
+        //    return response()->json([
+        //        'message' => 'Invalid or missing front_image file.',
+        //    ], 400);
+        //}
 
-    // Construct the URL
-    $url = "https://api-prod.tartanhq.com/aphrodite/external/v1/verification/file";
+        // Construct the URL
+        $url = "https://api-prod.tartanhq.com/aphrodite/external/v1/verification/file";
 
-    // Prepare the cURL file
-    $file = new \CURLFile($filePath->getPathname(), $filePath->getMimeType(), $filePath->getClientOriginalName());
+        // Prepare the cURL file
+        $file = new \CURLFile($filePath->getPathname(), $filePath->getMimeType(), $filePath->getClientOriginalName());
 
-    // Prepare the form data
-    $formData = [
-        'mode' => 'PROD',
-        'category' => 'individual-pii-data',
-        'type' => 'pan-ocr',
-        'applicationId' => 'test',
-        'front_image' => $file,
-    ];
+        // Prepare the form data
+        $formData = [
+            'mode' => 'PROD',
+            'category' => 'individual-pii-data',
+            'type' => 'pan-ocr',
+            'applicationId' => 'test',
+            'front_image' => $file,
+        ];
 
-    // Initialize cURL
-    $curl = curl_init();
-    curl_setopt_array($curl, [
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $formData,
-        CURLOPT_HTTPHEADER => [
-            'Authorization: Bearer ' . $token,
-            'x-api-key: ' . $apiKey,
-        ],
-    ]);
+        // Initialize cURL
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $formData,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+            ],
+        ]);
 
-    // Execute the request and capture the response
-    $response = curl_exec($curl);
-    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        // Execute the request and capture the response
+        $response = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-    // Check for cURL errors
-    if (curl_errno($curl)) {
-        $error = curl_error($curl);
+        // Check for cURL errors
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+
+            return response()->json([
+                'message' => 'cURL error occurred',
+                'error' => $error,
+            ], 500);
+        }
+
         curl_close($curl);
 
-        return response()->json([
-            'message' => 'cURL error occurred',
-            'error' => $error,
-        ], 500);
+        // Return the response based on HTTP code
+        if ($httpCode === 200) {
+            return response()->json([
+                'message' => 'PAN OCR processed successfully',
+                'data' => json_decode($response, true),
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Failed to process PAN OCR',
+                'response' => json_decode($response, true),
+            ], $httpCode);
+        }
     }
 
-    curl_close($curl);
+    // Async Status API
+    public function getLoginStatus(Request $request)
+    {
+        // Fetch input parameters
+        $endUserToken = $request->input('endUserToken'); // Token for end-user
+        $apiKey = $request->input('apiKey'); // API Key
 
-    // Return the response based on HTTP code
-    if ($httpCode === 200) {
-        return response()->json([
-            'message' => 'PAN OCR processed successfully',
-            'data' => json_decode($response, true),
-        ]);
-    } else {
-        return response()->json([
-            'message' => 'Failed to process PAN OCR',
-            'response' => json_decode($response, true),
-        ], $httpCode);
+        // // Validate inputs
+        // if (!$host || !$endUserToken || !$apiKey) {
+        //     return response()->json([
+        //         'message' => 'Missing required parameters.',
+        //     ], 400);
+        // }
+
+        // Construct the API URL
+        $url = "https://api-prod.tartanhq.com/aphrodite/api/link/v1/login/status?token={$endUserToken}";
+
+        try {
+            // Initialize cURL
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30, // Set timeout
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => [
+                    'x-api-key: ' . $apiKey,
+                ],
+            ]);
+
+            // Execute the request
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl); // Capture cURL error
+            curl_close($curl);
+
+            // Handle cURL errors
+            if ($response === false) {
+                return response()->json([
+                    'message' => 'cURL request failed.',
+                    'error' => $curlError,
+                ], 500);
+            }
+
+            // Parse the response
+            $responseData = json_decode($response, true);
+
+            // Return success or error based on HTTP code
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return response()->json([
+                    'message' => 'Request successful.',
+                    'response' => $responseData,
+                ], $httpCode);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to fetch login status.',
+                    'error' => $responseData,
+                ], $httpCode);
+            }
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
 
+    public function itrLogin(Request $request)
+    {
+        // Fetch input parameters
+        $pan = $request->input('pan'); // PAN number
+        $password = $request->input('password'); // Login password
+        $endUserToken = $request->input('endUserToken'); // Token for end-user
+        $sessionId = $request->input('sessionId'); // Session ID
+
+        // Construct the API URL
+        $url = "https://api-prod.tartanhq.com/aphrodite/external/v1/itr/login";
+
+        try {
+            // Initialize cURL
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30, // Set timeout
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode([
+                    'pan' => $pan,
+                    'password' => $password,
+                    'token' => $endUserToken,
+                    'sessionId' => $sessionId,
+                ]),
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                ],
+            ]);
+
+            // Execute the request
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl); // Capture cURL error
+            curl_close($curl);
+
+            // Handle cURL errors
+            if ($response === false) {
+                return response()->json([
+                    'message' => 'cURL request failed.',
+                    'error' => $curlError,
+                ], 500);
+            }
+
+            // Parse the response
+            $responseData = json_decode($response, true);
+
+            // Return success or error based on HTTP code
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return response()->json([
+                    'message' => 'Login successful.',
+                    'response' => $responseData,
+                ], $httpCode);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to log in.',
+                    'error' => $responseData,
+                ], $httpCode);
+            }
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
