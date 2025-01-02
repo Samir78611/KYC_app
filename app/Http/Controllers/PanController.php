@@ -79,6 +79,133 @@ class PanController extends Controller
         }
     }
 
+    public function createItrLink(Request $request)
+    {
+        // Validate incoming request
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'applicationId' => 'required|string',
+            'email' => 'required|email',
+        ]);
+
+        // Replace placeholders with actual values
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/create-link/itr';
+        $apiKey = 'qQmnRlPiQF72Ebzxib0If7JftH6RSeXY620AaEuT'; // Replace with your actual API key
+        $token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X0ZpbmFuYWx5eiIsImV4cCI6MTczNTY0MDU4MywiaWF0IjoxNzM1NjIyNTgzfQ.ZKS_89CnaSN2e9zGO2JB0ndSUTkyMcEhV5ZpLfYqJ4PJw1hTHpcgKJuBQFDAMU7dy6FrzhrWchf8RunQzBkMqw'; // Replace with your actual token
+
+        // Payload
+        $payload = json_encode([
+            'name' => $validated['name'],
+            'applicationId' => $validated['applicationId'],
+            'email' => $validated['email'],
+        ]);
+
+        // Initialize cURL
+        $curl = curl_init();
+
+        // Set cURL options
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+            CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+            CURLOPT_CUSTOMREQUEST => 'POST', // HTTP POST method
+            CURLOPT_POSTFIELDS => $payload, // JSON payload
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the request
+        $response = curl_exec($curl);
+
+        // Check for errors
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json([
+                'success' => false,
+                'message' => 'Curl error occurred.',
+                'error' => $error,
+            ], 500);
+        }
+
+        // Close cURL session
+        curl_close($curl);
+
+        // Parse and return the response
+        $responseData = json_decode($response, true);
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ], 200);
+    }
+    
+    public function verifyPan(Request $request)
+    {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'pan' => 'required|string|max:10',
+            'endUserToken' => 'required|string',
+        ]);
+
+        // API details
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/itr/pan';
+        $apiKey = 'qQmnRlPiQF72Ebzxib0If7JftH6RSeXY620AaEuT'; // Replace with your actual API key
+        $token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTYW5kYm94X0ZpbmFuYWx5eiIsImV4cCI6MTczNTA1MTQzNSwiaWF0IjoxNzM1MDMzNDM1fQ.APIq83MDIRVFQJwYp6BmRYE2-0eqTUyM2G0jmC4pt46aduJOy3vSjtqtG_BUEWwVabouAWHvDOIPv154qBntKg'; // Replace with your actual token
+
+        // Payload
+        $payload = json_encode([
+            'pan' => $validated['pan'],
+            'token' => $validated['endUserToken'],
+        ]);
+
+        // Initialize cURL
+        $curl = curl_init();
+
+        // Set cURL options
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+            CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+            CURLOPT_CUSTOMREQUEST => 'POST', // HTTP POST method
+            CURLOPT_POSTFIELDS => $payload, // JSON payload
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $token,
+                'x-api-key: ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+        ]);
+
+        // Execute the request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json([
+                'success' => false,
+                'message' => 'Curl error occurred.',
+                'error' => $error,
+            ], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Parse and return the response
+        $responseData = json_decode($response, true);
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ], 200);
+    }
     // Async Status API
     public function getLoginStatus(Request $request)
     {
