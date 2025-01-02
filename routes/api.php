@@ -160,4 +160,7 @@ Route::post('verifyPan-input', [PanController::class, 'verifyPan']);
 //Async Status API:nikita
 Route::get('async-status-api', [PanController::class, 'getLoginStatus']);
 Route::post('password-input', [PanController::class, 'itrLogin']);
+Route::post('itr-forgot-password', [PanController::class, 'forgotPassword']);
+Route::post('itr-forgot-password-otp', [PanController::class, 'forgotPasswordOtp']);
+
 

@@ -345,4 +345,142 @@ class PanController extends Controller
             ], 500);
         }
     }
+
+    public function forgotPassword(Request $request)
+    {
+        // Fetch input parameters
+        $pan = $request->input('pan'); // PAN number
+        $endUserToken = $request->input('endUserToken'); 
+
+        // Construct the API URL
+        $url = "https://api-prod.tartanhq.com/aphrodite/external/v1/itr/forgot-password";
+
+        try {
+            // Initialize cURL
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30, // Set timeout
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode([
+                    'pan' => $pan,
+                    'token' => $endUserToken
+                ]),
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                ],
+            ]);
+
+            // Execute the request
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl); // Capture cURL error
+            curl_close($curl);
+
+            // Handle cURL errors
+            if ($response === false) {
+                return response()->json([
+                    'message' => 'cURL request failed.',
+                    'error' => $curlError,
+                ], 500);
+            }
+
+            // Parse the response
+            $responseData = json_decode($response, true);
+
+             // Return success or error based on HTTP code
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return response()->json([
+                    'message' => 'Forgot password request successful.',
+                    'response' => $responseData,
+                ], $httpCode);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to process forgot password request.',
+                    'error' => $responseData,
+                ], $httpCode);
+            }
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function forgotPasswordOtp(Request $request)
+    {
+        // Fetch input parameters
+        $apiKey = $request->input('apiKey'); // API Key
+        $pan = $request->input('pan'); // PAN number
+        $token = $request->input('token'); // Token for the request
+        $sessionId = $request->input('sessionId'); // Session ID
+        $otp = $request->input('otp'); 
+
+        // Construct the API URL
+        $url = "https://api-prod.tartanhq.com/aphrodite/external/v1/itr/forgot-password-otp";
+
+        try {
+            // Initialize cURL
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30, // Set timeout
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode([
+                    'pan' => $pan,
+                    'token' => $token,
+                    'sessionId' => $sessionId,
+                    'otp' => $otp,
+                ]),
+                CURLOPT_HTTPHEADER => [
+                    'x-api-key: ' . $apiKey,
+                    'Content-Type: application/json',
+                ],
+            ]);
+
+            // Execute the request
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl); // Capture cURL error
+            curl_close($curl);
+
+            // Handle cURL errors
+            if ($response === false) {
+                return response()->json([
+                    'message' => 'cURL request failed.',
+                    'error' => $curlError,
+                ], 500);
+            }
+
+            // Parse the response
+            $responseData = json_decode($response, true);
+
+            // Return success or error based on HTTP code
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return response()->json([
+                    'message' => 'OTP verification successful.',
+                    'response' => $responseData,
+                ], $httpCode);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to verify OTP.',
+                    'error' => $responseData,
+                ], $httpCode);
+            }
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
