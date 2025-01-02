@@ -164,3 +164,5 @@ Route::post('itr-forgot-password', [PanController::class, 'forgotPassword']);
 Route::post('itr-forgot-password-otp', [PanController::class, 'forgotPasswordOtp']);
 
 
+Route::get('get-itr-data/{id}',[PanController::class,'getItrData']);
+Route::get('get-itr-data-download/{id}',[PanController::class,'getItrDataDownload']);
