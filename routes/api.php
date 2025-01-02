@@ -161,3 +161,5 @@ Route::post('verifyPan-input', [PanController::class, 'verifyPan']);
 Route::get('async-status-api', [PanController::class, 'getLoginStatus']);
 Route::post('password-input', [PanController::class, 'itrLogin']);
 
+Route::get('get-itr-data/{id}',[PanController::class,'getItrData']);
+Route::get('get-itr-data-download/{id}',[PanController::class,'getItrDataDownload']);
