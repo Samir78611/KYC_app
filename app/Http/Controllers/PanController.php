@@ -90,7 +90,7 @@ class PanController extends Controller
 
         // Replace placeholders with actual values
         $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/create-link/itr';
-         $apiKey = $request->input('apiKey'); // Retrieve API key from request body
+        $apiKey = $request->input('apiKey'); // Retrieve API key from request body
         $token = $request->input('token'); // Retrieve token from request body
 
         // Payload
@@ -143,22 +143,22 @@ class PanController extends Controller
             'data' => $responseData,
         ], 200);
     }
-    
+
     public function verifyPan(Request $request)
     {
         // Validate the incoming request
         $validated = $request->validate([
             'pan' => 'required',
             'endUserToken' => 'required',
-            
+
         ]);
 
         // API details
         $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/itr/pan';
-        $apiKey=$request->input('x-api-key');
-        $token=$request->input('token');
+        $apiKey = $request->input('x-api-key');
+        $token = $request->input('token');
 
-       
+
 
         // Payload
         $payload = json_encode([
@@ -353,7 +353,7 @@ class PanController extends Controller
     {
         // Fetch input parameters
         $pan = $request->input('pan'); // PAN number
-        $endUserToken = $request->input('endUserToken'); 
+        $endUserToken = $request->input('endUserToken');
 
         // Construct the API URL
         $url = "https://api-prod.tartanhq.com/aphrodite/external/v1/itr/forgot-password";
@@ -394,7 +394,7 @@ class PanController extends Controller
             // Parse the response
             $responseData = json_decode($response, true);
 
-             // Return success or error based on HTTP code
+            // Return success or error based on HTTP code
             if ($httpCode >= 200 && $httpCode < 300) {
                 return response()->json([
                     'message' => 'Forgot password request successful.',
@@ -422,7 +422,7 @@ class PanController extends Controller
         $pan = $request->input('pan'); // PAN number
         $token = $request->input('token'); // Token for the request
         $sessionId = $request->input('sessionId'); // Session ID
-        $otp = $request->input('otp'); 
+        $otp = $request->input('otp');
 
         // Construct the API URL
         $url = "https://api-prod.tartanhq.com/aphrodite/external/v1/itr/forgot-password-otp";
@@ -487,221 +487,221 @@ class PanController extends Controller
         }
     }
 
-    public function getDashboardData(Request $request,$id)
-{
-    // Validate the incoming request
-    $validated = $request->validate([
-        'apiKey' => 'required|string',
-        'token' => 'required|string',
-    ]);
-
-    // Fetch input parameters
-    $apiKey = $validated['apiKey']; // API Key
-    $token = $validated['token']; // Bearer Token
-
-    // Construct the API URL
-    $url = "https://api-prod.tartanhq.com/aphrodite/api/dashboard/v1/itr/{$id}";
-  
-
-    try {
-        // Initialize cURL
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30, // Set timeout
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . $token,
-                'x-api-key: ' . $apiKey,
-                'Content-Type: application/json',
-            ],
+    public function getDashboardData(Request $request, $id)
+    {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'apiKey' => 'required|string',
+            'token' => 'required|string',
         ]);
 
-        // Execute the request
-        $response = curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($curl); // Capture cURL error
-        curl_close($curl);
+        // Fetch input parameters
+        $apiKey = $validated['apiKey']; // API Key
+        $token = $validated['token']; // Bearer Token
 
-        // Handle cURL errors
-        if ($response === false) {
+        // Construct the API URL
+        $url = "https://api-prod.tartanhq.com/aphrodite/api/dashboard/v1/itr/{$id}";
+
+
+        try {
+            // Initialize cURL
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30, // Set timeout
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => [
+                    'Authorization: Bearer ' . $token,
+                    'x-api-key: ' . $apiKey,
+                    'Content-Type: application/json',
+                ],
+            ]);
+
+            // Execute the request
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl); // Capture cURL error
+            curl_close($curl);
+
+            // Handle cURL errors
+            if ($response === false) {
+                return response()->json([
+                    'message' => 'cURL request failed.',
+                    'error' => $curlError,
+                ], 500);
+            }
+
+            // Parse the response
+            $responseData = json_decode($response, true);
+
+            // Return success or error based on HTTP code
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return response()->json([
+                    'message' => 'Request successful.',
+                    'response' => $responseData,
+                ], $httpCode);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to fetch dashboard data.',
+                    'error' => $responseData,
+                ], $httpCode);
+            }
+        } catch (\Exception $e) {
+            // Handle unexpected errors
             return response()->json([
-                'message' => 'cURL request failed.',
-                'error' => $curlError,
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
             ], 500);
         }
-
-        // Parse the response
-        $responseData = json_decode($response, true);
-
-        // Return success or error based on HTTP code
-        if ($httpCode >= 200 && $httpCode < 300) {
-            return response()->json([
-                'message' => 'Request successful.',
-                'response' => $responseData,
-            ], $httpCode);
-        } else {
-            return response()->json([
-                'message' => 'Failed to fetch dashboard data.',
-                'error' => $responseData,
-            ], $httpCode);
-        }
-    } catch (\Exception $e) {
-        // Handle unexpected errors
-        return response()->json([
-            'message' => 'An unexpected error occurred.',
-            'error' => $e->getMessage(),
-        ], 500);
     }
-}
 
 
-//json data
-public function getItrData(Request $request, $id)
-{
-    // Validate the incoming request
-    $validated = $request->validate([
-        'apiKey' => 'required|string',
-        'token' => 'required|string',
-    ]);
-
-    // Fetch input parameters
-    $apiKey = $validated['apiKey']; // API Key
-    $token = $validated['token']; // Bearer Token
-
-    // Construct the API URL
-    $url = "https://api-prod.tartanhq.com/aphrodite/api/dashboard/v1/itr/" . urlencode($id);
-
-    try {
-        // Initialize cURL
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30, // Set timeout
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . $token,
-                'x-api-key: ' . $apiKey,
-                'Content-Type: application/json',
-            ],
+    //json data
+    public function getItrData(Request $request, $id)
+    {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'apiKey' => 'required|string',
+            'token' => 'required|string',
         ]);
 
-        // Execute the request
-        $response = curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($curl); // Capture cURL error
-        curl_close($curl);
+        // Fetch input parameters
+        $apiKey = $validated['apiKey']; // API Key
+        $token = $validated['token']; // Bearer Token
 
-        // Handle cURL errors
-        if ($response === false) {
+        // Construct the API URL
+        $url = "https://api-prod.tartanhq.com/aphrodite/api/dashboard/v1/itr/" . urlencode($id);
+
+        try {
+            // Initialize cURL
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30, // Set timeout
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => [
+                    'Authorization: Bearer ' . $token,
+                    'x-api-key: ' . $apiKey,
+                    'Content-Type: application/json',
+                ],
+            ]);
+
+            // Execute the request
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl); // Capture cURL error
+            curl_close($curl);
+
+            // Handle cURL errors
+            if ($response === false) {
+                return response()->json([
+                    'message' => 'cURL request failed.',
+                    'error' => $curlError,
+                ], 500);
+            }
+
+            // Parse the response
+            $responseData = json_decode($response, true);
+
+            // Return success or error based on HTTP code
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return response()->json([
+                    'message' => 'Request successful.',
+                    'response' => $responseData,
+                ], $httpCode);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to fetch dashboard data.',
+                    'error' => $responseData,
+                ], $httpCode);
+            }
+        } catch (\Exception $e) {
+            // Handle unexpected errors
             return response()->json([
-                'message' => 'cURL request failed.',
-                'error' => $curlError,
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
             ], 500);
         }
-
-        // Parse the response
-        $responseData = json_decode($response, true);
-
-        // Return success or error based on HTTP code
-        if ($httpCode >= 200 && $httpCode < 300) {
-            return response()->json([
-                'message' => 'Request successful.',
-                'response' => $responseData,
-            ], $httpCode);
-        } else {
-            return response()->json([
-                'message' => 'Failed to fetch dashboard data.',
-                'error' => $responseData,
-            ], $httpCode);
-        }
-    } catch (\Exception $e) {
-        // Handle unexpected errors
-        return response()->json([
-            'message' => 'An unexpected error occurred.',
-            'error' => $e->getMessage(),
-        ], 500);
     }
-}
 
 
-public function getItrDataDownload(Request $request, $id)
-{
-    // Validate the incoming request
-    $validated = $request->validate([
-        'apiKey' => 'required|string',
-        'token' => 'required|string',
-        'type' => 'required|array',
-        'type.*' => 'string',
-    ]);
-
-    // Fetch input parameters
-    $apiKey = $validated['apiKey']; // API Key
-    $token = $validated['token']; // Bearer Token
-    $types = $validated['type']; // Types array
-
-    // Construct the API URL with query parameters
-    $queryParams = http_build_query(['type' => $types]);
-    $url = "https://api-prod.tartanhq.com/aphrodite/api/dashboard/v1/itr/download/{$id}?" . $queryParams;
-
-    try {
-        // Initialize cURL
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30, // Set timeout
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . $token,
-                'x-api-key: ' . $apiKey,
-                'Content-Type: application/json',
-            ],
+    public function getItrDataDownload(Request $request, $id)
+    {
+        // Validate the incoming request
+        $validated = $request->validate([
+            'apiKey' => 'required|string',
+            'token' => 'required|string',
+            'type' => 'required|array',
+            'type.*' => 'string',
         ]);
 
-        // Execute the request
-        $response = curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($curl); // Capture cURL error
-        curl_close($curl);
+        // Fetch input parameters
+        $apiKey = $validated['apiKey']; // API Key
+        $token = $validated['token']; // Bearer Token
+        $types = $validated['type']; // Types array
 
-        // Handle cURL errors
-        if ($response === false) {
+        // Construct the API URL with query parameters
+        $queryParams = http_build_query(['type' => $types]);
+        $url = "https://api-prod.tartanhq.com/aphrodite/api/dashboard/v1/itr/download/{$id}?" . $queryParams;
+
+        try {
+            // Initialize cURL
+            $curl = curl_init();
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30, // Set timeout
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => [
+                    'Authorization: Bearer ' . $token,
+                    'x-api-key: ' . $apiKey,
+                    'Content-Type: application/json',
+                ],
+            ]);
+
+            // Execute the request
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl); // Capture cURL error
+            curl_close($curl);
+
+            // Handle cURL errors
+            if ($response === false) {
+                return response()->json([
+                    'message' => 'cURL request failed.',
+                    'error' => $curlError,
+                ], 500);
+            }
+
+            // Parse the response
+            $responseData = json_decode($response, true);
+
+            // Return success or error based on HTTP code
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return response()->json([
+                    'message' => 'Request successful.',
+                    'response' => $responseData,
+                ], $httpCode);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to fetch dashboard data.',
+                    'error' => $responseData,
+                ], $httpCode);
+            }
+        } catch (\Exception $e) {
+            // Handle unexpected errors
             return response()->json([
-                'message' => 'cURL request failed.',
-                'error' => $curlError,
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(),
             ], 500);
         }
-
-        // Parse the response
-        $responseData = json_decode($response, true);
-
-        // Return success or error based on HTTP code
-        if ($httpCode >= 200 && $httpCode < 300) {
-            return response()->json([
-                'message' => 'Request successful.',
-                'response' => $responseData,
-            ], $httpCode);
-        } else {
-            return response()->json([
-                'message' => 'Failed to fetch dashboard data.',
-                'error' => $responseData,
-            ], $httpCode);
-        }
-    } catch (\Exception $e) {
-        // Handle unexpected errors
-        return response()->json([
-            'message' => 'An unexpected error occurred.',
-            'error' => $e->getMessage(),
-        ], 500);
     }
-}
 }
