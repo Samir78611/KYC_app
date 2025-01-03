@@ -704,7 +704,7 @@ class PanController extends Controller
             ], 500);
         }
     }
-}
+
 //chnage password
 public function changePassword(Request $request)
     {
