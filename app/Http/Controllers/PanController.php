@@ -704,4 +704,69 @@ public function getItrDataDownload(Request $request, $id)
         ], 500);
     }
 }
+//chnage password
+public function changePassword(Request $request)
+    {
+        // Validate the request data
+        $validated = $request->validate([
+            'pan' => 'required',
+            'endUserToken' => 'required',
+            'sessionId' => 'required',
+            'password' => 'required', // Ensures password and confirmPassword match
+        ]);
+
+        // API URL
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/itr/change-password';
+
+        // Create the payload
+        $payload = json_encode([
+            'pan' => $validated['pan'],
+            'token' => $validated['endUserToken'],
+            'sessionId' => $validated['sessionId'],
+            'password' => $validated['password'],
+            'confirmPassword' => $validated['password'], // Using the same password as confirmPassword
+        ]);
+
+        // Initialize cURL
+        $curl = curl_init();
+
+        // Set cURL options
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+            CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+            CURLOPT_CUSTOMREQUEST => 'POST', // HTTP POST method
+            CURLOPT_POSTFIELDS => $payload, // JSON payload
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json', // Set content type to JSON
+            ],
+        ]);
+
+        // Execute the request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json([
+                'success' => false,
+                'message' => 'Curl error occurred.',
+                'error' => $error,
+            ], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Parse the response
+        $responseData = json_decode($response, true);
+
+        // Return the response to the client
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ], 200);
+    }
 }
