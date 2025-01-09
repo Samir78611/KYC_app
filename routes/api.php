@@ -169,3 +169,5 @@ Route::get('get-itr-data-download/{id}',[PanController::class,'getItrDataDownloa
 Route::post('/change-password', [PanController::class, 'changePassword']);
 //Consented External Login udyam
 Route::post('consented-external-login', [UdyamController::class, 'consentedExternalLogin']);
+Route::post('udyam-external-login',[PanController::class,'initiateUdyam']);
+Route::get('udyam-status/{jobId}', [PanController::class, 'udyamStatus']);

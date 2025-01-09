@@ -770,4 +770,137 @@ class PanController extends Controller
             'data' => $responseData,
         ], 200);
     }
+
+
+    // ...existing code...
+
+    public function initiateUdyam(Request $request)
+    {
+        // Validate the request data
+        $validated = $request->validate([
+            'udyamRegistrationNumber' => 'required',
+            'customerApplicationId' => 'required',
+            'authorization' => 'required',
+            'x-api-key' => 'required',
+        ]);
+    
+        // API URL
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v2/udyam/initiate';
+    
+        // Create the payload
+        $payload = json_encode([
+            'udyamRegistrationNumber' => $validated['udyamRegistrationNumber'],
+            'customerApplicationId' => $validated['customerApplicationId'],
+        ]);
+    
+        // Initialize cURL
+        $curl = curl_init();
+    
+        // Set cURL options
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $payload,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $validated['authorization'],
+                'x-api-key: ' . $validated['x-api-key'],
+                'Content-Type: application/json',
+            ],
+        ]);
+    
+        // Execute cURL request
+        $response = curl_exec($curl);
+    
+        // Check for errors
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error_msg], 500);
+        }
+    
+        // Close cURL session
+        curl_close($curl);
+    
+        // Decode the response
+        $responseData = json_decode($response, true);
+    
+        // Return the response with success message
+        return response()->json([
+            'success' => true,
+            'message' => 'Udyam initiation successful',
+            'data' => $responseData,
+        ], 200);
+    }
+
+
+
+    public function udyamStatus(Request $request, $jobId)
+    {
+        // Validate the request data
+        $validated = $request->validate([
+            'authorization' => 'required',
+            'x-api-key' => 'required',
+        ]);
+    
+        // API URL
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v2/udyam/status/' . $jobId;
+    
+        // Initialize cURL
+        $curl = curl_init();
+    
+        // Set cURL options
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $validated['authorization'],
+                'x-api-key: ' . $validated['x-api-key'],
+                'Content-Type: application/json',
+            ],
+        ]);
+    
+        // Execute cURL request
+        $response = curl_exec($curl);
+    
+        // Check for errors
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+            curl_close($curl);
+            return response()->json(['error' => $error_msg], 500);
+        }
+    
+        // Close cURL session
+        curl_close($curl);
+    
+        // Decode the response
+        $responseData = json_decode($response, true);
+    
+        // Check if data is found
+        if (!empty($responseData)) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Udyam status retrieval successful',
+                'data' => $responseData,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No data found',
+            ], 404);
+        }
+    }
+
+
 }
