@@ -167,3 +167,5 @@ Route::post('itr-forgot-password-otp', [PanController::class, 'forgotPasswordOtp
 Route::get('get-itr-data/{id}',[PanController::class,'getItrData']);
 Route::get('get-itr-data-download/{id}',[PanController::class,'getItrDataDownload']);
 Route::post('/change-password', [PanController::class, 'changePassword']);
+//Consented External Login udyam
+Route::post('consented-external-login', [UdyamController::class, 'consentedExternalLogin']);

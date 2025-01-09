@@ -705,8 +705,8 @@ class PanController extends Controller
         }
     }
 
-//chnage password
-public function changePassword(Request $request)
+    //chnage password
+    public function changePassword(Request $request)
     {
         // Validate the request data
         $validated = $request->validate([
