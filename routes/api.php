@@ -147,27 +147,30 @@ Route::post('get-all-issued-documents', [DigilockerController::class, 'getAllIss
 //Legal Verification APIs
 Route::post('verify-court-record', [BusinessController::class, 'verifyCourtRecord']);
 Route::post('aadhar-ocr', [DigilockerController::class, 'processAadhaarOcr']);
-//Non Consented Data Fetch
-Route::get('get-non-consented-data-fetch/{id}', [VerificationController::class, 'getApplicationById']);
+
+
 //pan ocr
 Route::post('pan-ocr', [PanController::class, 'panOcrApi']);
-//udyam
+//udyam //Non Consented Data Fetch //consented data
 Route::get('cosented-data-fetched/{id}',[udyamController::class,'getApplication']);
+Route::get('get-non-consented-data-fetch/{id}', [VerificationController::class, 'getApplicationById']);
+Route::post('udyam-create-link', [udyamController::class, 'udyamCreateLink']);
+Route::get('/udyam/fetch/{jobId}', [UdyamController::class, 'fetchDetails']);
 
-//ITRS APIS Route:imran
+//Itr apis
 Route::post('/createItrs-Link', [PanController::class, 'createItrLink']);
 Route::post('verifyPan-input', [PanController::class, 'verifyPan']);
-//Async Status API:nikita
 Route::get('async-status-api', [PanController::class, 'getLoginStatus']);
 Route::post('password-input', [PanController::class, 'itrLogin']);
 Route::post('itr-forgot-password', [PanController::class, 'forgotPassword']);
 Route::post('itr-forgot-password-otp', [PanController::class, 'forgotPasswordOtp']);
-
-
 Route::get('get-itr-data/{id}',[PanController::class,'getItrData']);
 Route::get('get-itr-data-download/{id}',[PanController::class,'getItrDataDownload']);
 Route::post('/change-password', [PanController::class, 'changePassword']);
+
 //Consented External Login udyam
 Route::post('consented-external-login', [UdyamController::class, 'consentedExternalLogin']);
 Route::post('udyam-external-login',[PanController::class,'initiateUdyam']);
 Route::get('udyam-status/{jobId}', [PanController::class, 'udyamStatus']);
+Route::post('consented-otp-login', [UdyamController::class, 'consentedOtpLogin']);
+
