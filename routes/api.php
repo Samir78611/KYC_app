@@ -162,8 +162,6 @@ Route::get('async-status-api', [PanController::class, 'getLoginStatus']);
 Route::post('password-input', [PanController::class, 'itrLogin']);
 Route::post('itr-forgot-password', [PanController::class, 'forgotPassword']);
 Route::post('itr-forgot-password-otp', [PanController::class, 'forgotPasswordOtp']);
-
-
 Route::get('get-itr-data/{id}',[PanController::class,'getItrData']);
 Route::get('get-itr-data-download/{id}',[PanController::class,'getItrDataDownload']);
 Route::post('/change-password', [PanController::class, 'changePassword']);

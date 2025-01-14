@@ -680,9 +680,9 @@ class VerificationController extends Controller
     {
         $authorizationToken = $request->header('Authorization'); // Get Authorization token from the header
 
-        if (!$authorizationToken) {
-            return response()->json(['error' => 'Authorization token is required'], 400);
-        }
+        // if (!$authorizationToken) {
+        //     return response()->json(['error' => 'Authorization token is required'], 400);
+        // }
 
         $baseUrl = "https://api-prod.tartanhq.com/aphrodite/api/dashboard/v1/application/$id";
 
