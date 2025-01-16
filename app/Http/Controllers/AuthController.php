@@ -320,14 +320,14 @@ class AuthController extends Controller
             'token' => 'required|string',   // Added dynamic token
             'apiKey' => 'required|string',  // Added dynamic API key
         ]);
-    
+
         // Define the API endpoint
         $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
-    
+
         // Get the API key and token dynamically from the request
         $token = $validatedData['token'];   // Dynamic bearer token
         $apiKey = $validatedData['apiKey']; // Dynamic API key
-    
+
         // Prepare the JSON payload dynamically from the request
         $payload = [
             "category" => "individual-pii-data",
@@ -339,17 +339,17 @@ class AuthController extends Controller
                 "otp" => $validatedData['otp']
             ]
         ];
-    
+
         // Define the headers for the request
         $headers = [
             'Authorization: Bearer ' . $token,
             'x-api-key: ' . $apiKey,
             'Content-Type: application/json',
         ];
-    
+
         // Initialize cURL
         $curl = curl_init();
-    
+
         // Set cURL options
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
@@ -365,26 +365,26 @@ class AuthController extends Controller
             CURLOPT_POSTFIELDS => json_encode($payload), // Send JSON payload
             CURLOPT_HTTPHEADER => $headers,             // Set headers dynamically
         ]);
-    
+
         // Execute the request
         $response = curl_exec($curl);
-    
+
         // Check for cURL errors
         if ($response === false) {
             return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
         }
-    
+
         // Get HTTP status code
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
+
         // Close cURL session
         curl_close($curl);
-    
+
         // Check if response is not 200
         if ($httpStatus != 200) {
             return response()->json(['error' => 'API error: ' . $response], $httpStatus);
         }
-    
+
         // Return the API response
         return response()->json(json_decode($response), 200);
     }
@@ -398,14 +398,14 @@ class AuthController extends Controller
             'token' => 'required|string',  // Dynamic bearer token
             'apiKey' => 'required|string', // Dynamic API key
         ]);
-    
+
         // Define the API endpoint
         $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
-    
+
         // Get the API key and token dynamically from the request
         $token = $validatedData['token'];   // Dynamic bearer token
         $apiKey = $validatedData['apiKey']; // Dynamic API key
-    
+
         // Prepare the JSON payload dynamically from the request
         $payload = [
             "category" => "individual-pii-data",
@@ -415,17 +415,17 @@ class AuthController extends Controller
                 "aadhaarNo" => $validatedData['aadhaarNo'],
             ]
         ];
-    
+
         // Define the headers for the request
         $headers = [
             'Authorization: Bearer ' . $token,
             'x-api-key: ' . $apiKey,
             'Content-Type: application/json',
         ];
-    
+
         // Initialize cURL
         $curl = curl_init();
-    
+
         // Set cURL options
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);  // Disable host verification (use cautiously)
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);  // Disable peer certificate verification (use cautiously)
@@ -441,30 +441,30 @@ class AuthController extends Controller
             CURLOPT_POSTFIELDS => json_encode($payload), // Send JSON payload
             CURLOPT_HTTPHEADER => $headers,              // Set headers dynamically
         ]);
-    
+
         // Execute the request
         $response = curl_exec($curl);
-    
+
         // Check for cURL errors
         if ($response === false) {
             return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
         }
-    
+
         // Get HTTP status code
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
+
         // Close cURL session
         curl_close($curl);
-    
+
         // Check if response is not 200
         if ($httpStatus != 200) {
             return response()->json(['error' => 'API error: ' . $response], $httpStatus);
         }
-    
+
         // Return the API response
         return response()->json(json_decode($response), 200);
     }
-    
+
 
     //  Aadhaar Validation (w/o OTP, w/o Demographic)
     public function aadhaarAdvancedVerification(Request $request)
@@ -475,14 +475,14 @@ class AuthController extends Controller
             'token' => 'required|string',  // Dynamic bearer token
             'apiKey' => 'required|string', // Dynamic API key
         ]);
-    
+
         // Define the API endpoint
         $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
-    
+
         // Get the API key and token dynamically from the request
         $token = $validatedData['token'];   // Dynamic bearer token
         $apiKey = $validatedData['apiKey']; // Dynamic API key
-    
+
         // Prepare the JSON payload dynamically from the request
         $payload = [
             "category" => "individual-pii-data",
@@ -492,17 +492,17 @@ class AuthController extends Controller
                 "aadhaarNumber" => $validatedData['aadhaarNumber'],
             ]
         ];
-    
+
         // Define the headers for the request
         $headers = [
             'Authorization: Bearer ' . $token,
             'x-api-key: ' . $apiKey,
             'Content-Type: application/json',
         ];
-    
+
         // Initialize cURL
         $curl = curl_init();
-    
+
         // Set cURL options
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);  // Disable host verification (use cautiously)
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);  // Disable peer certificate verification (use cautiously)
@@ -518,30 +518,30 @@ class AuthController extends Controller
             CURLOPT_POSTFIELDS => json_encode($payload), // Send JSON payload
             CURLOPT_HTTPHEADER => $headers,              // Set headers dynamically
         ]);
-    
+
         // Execute the request
         $response = curl_exec($curl);
-    
+
         // Check for cURL errors
         if ($response === false) {
             return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
         }
-    
+
         // Get HTTP status code
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
+
         // Close cURL session
         curl_close($curl);
-    
+
         // Check if response is not 200
         if ($httpStatus != 200) {
             return response()->json(['error' => 'API error: ' . $response], $httpStatus);
         }
-    
+
         // Return the API response
         return response()->json(json_decode($response), 200);
     }
-    
+
 
     // Aadhar Validation (w/o OTP) - Demographic Details
     public function aadhaarVerify(Request $request)
@@ -549,7 +549,7 @@ class AuthController extends Controller
         $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
         $token = $request->input('token');
         $apiKey = $request->input('apiKey');
-        
+
         // Define the payload with dynamic request data
         $payload = [
             "category" => "individual-pii-data",
@@ -627,7 +627,7 @@ class AuthController extends Controller
 
         // Initialize cURL
         $curl = curl_init();
-    
+
         // Set cURL options
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);  // Disable host verification (use cautiously)
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);  // Disable peer certificate verification (use cautiously)
@@ -643,30 +643,111 @@ class AuthController extends Controller
             CURLOPT_POSTFIELDS => json_encode($payload), // Send JSON payload
             CURLOPT_HTTPHEADER => $headers,              // Set headers dynamically
         ]);
-    
+
         // Execute the request
         $response = curl_exec($curl);
-    
+
         // Check for cURL errors
         if ($response === false) {
             return response()->json(['error' => 'cURL error: ' . curl_error($curl)], 500);
         }
-    
+
         // Get HTTP status code
         $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
+
         // Close cURL session
         curl_close($curl);
-    
+
         // Check if response is not 200
         if ($httpStatus != 200) {
             return response()->json(['error' => 'API error: ' . $response], $httpStatus);
         }
-    
+
         // Return the API response
         return response()->json(json_decode($response), 200);
     }
 
+
+    public function ifscVerification(Request $request)
+    {
+        // Validate the request data
+        $validated = $request->validate([
+            'ifscCode' => 'required|string',
+            'authorization' => 'required|string',
+            'x-api-key' => 'required|string',
+        ]);
+
+        // API URL
+        $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
+
+        // Create the payload
+        $payload = [
+            "category" => "financial-and-credit",
+            "type" => "ifsc",
+            "applicationId" => "test",
+            "data" => [
+                "ifscCode" => $validated['ifscCode'],
+            ],
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+
+        // Set cURL options
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 300, // Increase timeout to 300 seconds
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $validated['authorization'],
+                'x-api-key: ' . $validated['x-api-key'],
+                'Content-Type: application/json',
+            ],
+            CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+            CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+        ]);
+
+        // Execute the request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json([
+                'success' => false,
+                'message' => 'Curl error occurred.',
+                'error' => $error,
+            ], 500);
+        }
+
+        // Get HTTP status code
+        $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl); // Close cURL session
+
+        // Parse the response
+        $responseData = json_decode($response, true);
+
+        // Check if response is not 200
+        if ($httpStatus != 200) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to process IFSC verification.',
+                'error' => $responseData,
+            ], $httpStatus);
+        }
+
+        // Return the response to the client
+        return response()->json([
+            'success' => true,
+            'message' => 'IFSC verification successful.',
+            'data' => $responseData,
+        ], 200);
+    }
 }
-
-

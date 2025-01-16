@@ -67,6 +67,7 @@ Route::post('authenticate', [AuthController::class, 'authenticate']);
 
 Route::post('verify-bank-account', [AuthController::class, 'verifyBankAccount']);
 Route::post('mobile-to-bank-verification', [AuthController::class, 'mobileToBankVerification']);
+Route::post('ifsc-verification', [AuthController::class, 'ifscVerification']);
 
 //Aadhaar Verification (w OTP)
 Route::post('aadhaar-get-otp', [AuthController::class, 'aadhaarGetOtp']);
