@@ -598,4 +598,87 @@ class AuthController extends Controller
         // Return the response
         return response()->json(['response' => json_decode($response, true)]);
     }
+    
+public function ifscVerification(Request $request)
+{
+    // Validate the request data
+    $validated = $request->validate([
+        'ifscCode' => 'required|string',
+        'authorization' => 'required|string',
+        'x-api-key' => 'required|string',
+    ]);
+
+    // API URL
+    $url = 'https://api-prod.tartanhq.com/aphrodite/external/v1/verification';
+
+    // Create the payload
+    $payload = [
+        "category" => "financial-and-credit",
+        "type" => "ifsc",
+        "applicationId" => "test",
+        "data" => [
+            "ifscCode" => $validated['ifscCode'],
+        ],
+    ];
+
+    // Initialize cURL
+    $curl = curl_init();
+
+    // Set cURL options
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 300, // Increase timeout to 300 seconds
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $validated['authorization'],
+            'x-api-key: ' . $validated['x-api-key'],
+            'Content-Type: application/json',
+        ],
+        CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+        CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+    ]);
+
+    // Execute the request
+    $response = curl_exec($curl);
+
+    // Check for cURL errors
+    if (curl_errno($curl)) {
+        $error = curl_error($curl);
+        curl_close($curl);
+        return response()->json([
+            'success' => false,
+            'message' => 'Curl error occurred.',
+            'error' => $error,
+        ], 500);
+    }
+
+    // Get HTTP status code
+    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl); // Close cURL session
+
+    // Parse the response
+    $responseData = json_decode($response, true);
+
+    // Check if response is not 200
+    if ($httpStatus != 200) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to process IFSC verification.',
+            'error' => $responseData,
+        ], $httpStatus);
+    }
+
+    // Return the response to the client
+    return response()->json([
+        'success' => true,
+        'message' => 'IFSC verification successful.',
+        'data' => $responseData,
+    ], 200);
+}
 }
