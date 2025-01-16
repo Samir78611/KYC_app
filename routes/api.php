@@ -173,4 +173,5 @@ Route::post('consented-external-login', [UdyamController::class, 'consentedExter
 Route::post('udyam-external-login',[PanController::class,'initiateUdyam']);
 Route::get('udyam-status/{jobId}', [PanController::class, 'udyamStatus']);
 Route::post('consented-otp-login', [UdyamController::class, 'consentedOtpLogin']);
+Route::post('verify-bank-account-penny-less', [AuthController::class, 'bankAccountPennyLess']);
 
