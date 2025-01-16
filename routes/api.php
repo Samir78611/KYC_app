@@ -68,6 +68,7 @@ Route::post('authenticate', [AuthController::class, 'authenticate']);
 Route::post('verify-bank-account', [AuthController::class, 'verifyBankAccount']);
 Route::post('mobile-to-bank-verification', [AuthController::class, 'mobileToBankVerification']);
 Route::post('ifsc-verification', [AuthController::class, 'ifscVerification']);
+Route::post('verify-bank-account-penny-less', [AuthController::class, 'bankAccountPennyLess']);
 
 //Aadhaar Verification (w OTP)
 Route::post('aadhaar-get-otp', [AuthController::class, 'aadhaarGetOtp']);
@@ -174,5 +175,5 @@ Route::post('consented-external-login', [UdyamController::class, 'consentedExter
 Route::post('udyam-external-login',[PanController::class,'initiateUdyam']);
 Route::get('udyam-status/{jobId}', [PanController::class, 'udyamStatus']);
 Route::post('consented-otp-login', [UdyamController::class, 'consentedOtpLogin']);
-Route::post('verify-bank-account-penny-less', [AuthController::class, 'bankAccountPennyLess']);
+
 
