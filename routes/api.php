@@ -177,3 +177,6 @@ Route::get('udyam-status/{jobId}', [PanController::class, 'udyamStatus']);
 Route::post('consented-otp-login', [UdyamController::class, 'consentedOtpLogin']);
 
 
+//Equifax fetch report
+Route::post('fetch-credit-report', [AuthController::class, 'fetchCreditReport']);
+Route::post('fetch-pdf-credit-report', [AuthController::class, 'fetchPdfCreditReport']);
