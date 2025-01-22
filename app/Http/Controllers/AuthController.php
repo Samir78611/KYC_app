@@ -750,4 +750,176 @@ class AuthController extends Controller
             'data' => $responseData,
         ], 200);
     }
+
+    //Equifax fetch verification
+public function fetchCreditReport(Request $request)
+{
+    // Validate the request data
+    $validated = $request->validate([
+        'name' => 'required|string',
+        'id_number' => 'required|string',
+        'id_type' => 'required|string',
+        'mobile' => 'required|string',
+        'consent' => 'required|string',
+        'authorization' => 'required|string',
+    ]);
+
+    // API URL
+    $url = 'https://sandbox.surepass.io/api/v1/credit-report-v2/fetch-report';
+
+    // Create the payload
+    $payload = [
+        'name' => $validated['name'],
+        'id_number' => $validated['id_number'],
+        'id_type' => $validated['id_type'],
+        'mobile' => $validated['mobile'],
+        'consent' => $validated['consent'],
+    ];
+
+    // Initialize cURL
+    $curl = curl_init();
+
+    // Set cURL options
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 300, // Increase timeout to 300 seconds
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $validated['authorization'],
+            'Content-Type: application/json',
+        ],
+        CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+        CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+    ]);
+
+    // Execute the request
+    $response = curl_exec($curl);
+
+    // Check for cURL errors
+    if (curl_errno($curl)) {
+        $error = curl_error($curl);
+        curl_close($curl);
+        return response()->json([
+            'success' => false,
+            'message' => 'Curl error occurred.',
+            'error' => $error,
+        ], 500);
+    }
+
+    // Get HTTP status code
+    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl); // Close cURL session
+
+    // Parse the response
+    $responseData = json_decode($response, true);
+
+    // Check if response is not 200
+    if ($httpStatus != 200) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch credit report.',
+            'error' => $responseData,
+        ], $httpStatus);
+    }
+
+    // Return the response to the client
+    return response()->json([
+        'success' => true,
+        'message' => 'Credit report fetched successfully.',
+        'data' => $responseData,
+    ], 200);
+}
+
+//fetch pdf report
+
+public function fetchPdfCreditReport(Request $request)
+{
+    // Validate the request data
+    $validated = $request->validate([
+        'name' => 'required|string',
+        'id_number' => 'required|string',
+        'id_type' => 'required|string',
+        'mobile' => 'required|string',
+        'consent' => 'required|string',
+        'authorization' => 'required|string',
+    ]);
+
+    // API URL
+    $url = 'https://sandbox.surepass.io/api/v1/credit-report-v2/fetch-pdf-report';
+
+    // Create the payload
+    $payload = [
+        'name' => $validated['name'],
+        'id_number' => $validated['id_number'],
+        'id_type' => $validated['id_type'],
+        'mobile' => $validated['mobile'],
+        'consent' => $validated['consent'],
+    ];
+
+    // Initialize cURL
+    $curl = curl_init();
+
+    // Set cURL options
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 300, // Increase timeout to 300 seconds
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $validated['authorization'],
+            'Content-Type: application/json',
+        ],
+        CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+        CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+    ]);
+
+    // Execute the request
+    $response = curl_exec($curl);
+    //dd($response);
+
+    // Check for cURL errors
+    if (curl_errno($curl)) {
+        $error = curl_error($curl);
+        curl_close($curl);
+        return response()->json([
+            'success' => false,
+            'message' => 'Curl error occurred.',
+            'error' => $error,
+        ], 500);
+    }
+
+    // Get HTTP status code
+    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl); // Close cURL session
+
+    // Parse the response
+    $responseData = json_decode($response, true);
+
+    // Check if response is not 200
+    if ($httpStatus != 200) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch PDF credit report.',
+            'error' => $responseData,
+        ], $httpStatus);
+    }
+
+    // Return the response to the client
+    return response()->json([
+        'success' => true,
+        'message' => 'PDF credit report fetched successfully.',
+        'data' => $responseData,
+    ], 200);
+}
 }

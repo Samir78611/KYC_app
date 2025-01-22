@@ -181,3 +181,7 @@ Route::post('consented-otp-login', [UdyamController::class, 'consentedOtpLogin']
 //17-1-2025
 Route::post('credit-report-experian', [CreditController::class, 'experianCreditReport']);
 Route::post('experian-credit-report-pdf', [CreditController::class, 'experianCreditReportPdf']);
+
+//Equifax fetch report
+Route::post('fetch-credit-report', [AuthController::class, 'fetchCreditReport']);
+Route::post('fetch-pdf-credit-report', [AuthController::class, 'fetchPdfCreditReport']);
