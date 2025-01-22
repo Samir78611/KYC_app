@@ -3,17 +3,19 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CinController;
+use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DigilockerController;
 use App\Http\Controllers\GSTController;
 use App\Http\Controllers\KYCController;
-use App\Http\Controllers\VerificationController;
-use App\Http\Controllers\PayslipController;
 use App\Http\Controllers\PanController;
+use App\Http\Controllers\PayslipController;
 use App\Http\Controllers\udyamController;
 
 
+use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -176,4 +178,6 @@ Route::post('udyam-external-login',[PanController::class,'initiateUdyam']);
 Route::get('udyam-status/{jobId}', [PanController::class, 'udyamStatus']);
 Route::post('consented-otp-login', [UdyamController::class, 'consentedOtpLogin']);
 
-
+//17-1-2025
+Route::post('credit-report-experian', [CreditController::class, 'experianCreditReport']);
+Route::post('experian-credit-report-pdf', [CreditController::class, 'experianCreditReportPdf']);

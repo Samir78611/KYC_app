@@ -43,7 +43,7 @@ class udyamController extends Controller
     
         // Execute cURL request
         $response = curl_exec($curl);
-    
+        
         // Check for cURL errors
         if ($error = curl_error($curl)) {
             curl_close($curl);
