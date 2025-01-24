@@ -185,3 +185,8 @@ Route::post('experian-credit-report-pdf', [CreditController::class, 'experianCre
 //Equifax fetch report
 Route::post('fetch-credit-report', [AuthController::class, 'fetchCreditReport']);
 Route::post('fetch-pdf-credit-report', [AuthController::class, 'fetchPdfCreditReport']);
+
+// Credit Report
+
+Route::post('/cibil-report', [AuthController::class, 'fetchCibilReport']);
+Route::post('/cibil-report-pdf', [AuthController::class, 'fetchCibilReportPdf']);

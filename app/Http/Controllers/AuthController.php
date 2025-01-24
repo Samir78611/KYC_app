@@ -922,4 +922,139 @@ public function fetchPdfCreditReport(Request $request)
         'data' => $responseData,
     ], 200);
 }
+
+public function fetchCibilReport(Request $request)
+    {
+        // Validate the required fields
+        $validated = $request->validate([
+            'mobile' => 'required|string',
+            'pan' => 'required|string',
+            'name' => 'required|string',
+            'gender' => 'required|string|in:male,female,other',
+            'consent' => 'required|string|in:Y,N',
+            'token' => 'required|string', // Token must be passed securely
+        ]);
+
+        // API URL
+        $url = 'https://sandbox.surepass.io/api/v1/credit-report-cibil/fetch-report';
+
+        // Prepare the request payload
+        $payload = [
+            'mobile' => $validated['mobile'],
+            'pan' => $validated['pan'],
+            'name' => $validated['name'],
+            'gender' => $validated['gender'],
+            'consent' => $validated['consent'],
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+
+        // Set cURL options
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+            CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload), // Payload as JSON
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $validated['token'],
+            ],
+        ]);
+
+        // Execute the request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json([
+                'success' => false,
+                'message' => 'Curl error occurred.',
+                'error' => $error,
+            ], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Parse the response
+        $responseData = json_decode($response, true);
+
+        // Return the response to the client
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ], 200);
+    }
+    public function fetchCibilReportPdf(Request $request)
+    {
+        // Validate the required fields
+        $validated = $request->validate([
+            'mobile' => 'required|string',
+            'pan' => 'required|string',
+            'name' => 'required|string',
+            'gender' => 'required|string|in:male,female,other',
+            'consent' => 'required|string|in:Y,N',
+            'token' => 'required|string', // Token must be passed securely
+        ]);
+
+        // API URL
+        $url = 'https://sandbox.surepass.io/api/v1/credit-report-cibil/fetch-report-pdf';
+
+        // Prepare the request payload
+        $payload = [
+            'mobile' => $validated['mobile'],
+            'pan' => $validated['pan'],
+            'name' => $validated['name'],
+            'gender' => $validated['gender'],
+            'consent' => $validated['consent'],
+        ];
+
+        // Initialize cURL
+        $curl = curl_init();
+
+        // Set cURL options
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYHOST => 0, // Disable SSL host verification
+            CURLOPT_SSL_VERIFYPEER => 0, // Disable SSL peer verification
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($payload), // Payload as JSON
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $validated['token'],
+            ],
+        ]);
+
+        // Execute the request
+        $response = curl_exec($curl);
+
+        // Check for cURL errors
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            return response()->json([
+                'success' => false,
+                'message' => 'Curl error occurred.',
+                'error' => $error,
+            ], 500);
+        }
+
+        // Close the cURL session
+        curl_close($curl);
+
+        // Parse the response
+        $responseData = json_decode($response, true);
+
+        // Return the response to the client
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ], 200);
+    }
 }
