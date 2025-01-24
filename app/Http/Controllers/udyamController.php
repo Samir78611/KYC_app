@@ -167,7 +167,7 @@ class udyamController extends Controller
             'isConsentedFlow' => 'required|boolean',
             'mode' => 'required',
             'authorization' => 'required',
-            'x-api-key' => 'required',
+            'apikey' => 'required',
         ]);
     
         // API URL
@@ -198,7 +198,7 @@ class udyamController extends Controller
             CURLOPT_POSTFIELDS => $payload,
             CURLOPT_HTTPHEADER => [
                 'Authorization: Bearer ' . $validated['authorization'],
-                'x-api-key: ' . $validated['x-api-key'],
+                'x-api-key: ' . $validated['apikey'],
                 'Content-Type: application/json',
             ],
         ]);
